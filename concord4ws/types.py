@@ -305,7 +305,7 @@ class KeyfobMessage(BaseModel):
     data: list[int]
 
 
-type ConcordReceivedMessageType = (
+ConcordReceivedMessageType = (
     ConcordAckMessage
     | ConcordNakMessage
     | ConcordPanelTypeMessage
@@ -348,7 +348,7 @@ class StateReceivedMessage(BaseModel):
     data: State
 
 
-type ConcordMessageType = StateReceivedMessage | ConcordReceivedMessage
+ConcordMessageType = StateReceivedMessage | ConcordReceivedMessage
 ReceivableMessage = Annotated[ConcordMessageType, Field(discriminator="type")]
 
 
@@ -456,7 +456,7 @@ class ConcordDynamicDataRefreshCommand(BaseModel):
     message: Literal["dynamicDataRefresh"] = "dynamicDataRefresh"
 
 
-type ConcordCommandType = (
+ConcordCommandType = (
     ConcordListCommand
     | ConcordArmCommand
     | ConcordDisarmCommand
@@ -475,8 +475,8 @@ class GetStateSendableMessage(BaseModel):
     type: Literal["getState"] = "getState"
 
 
-type SendableMessageType = CommandSendableMessage | GetStateSendableMessage
-type SendableMessage = Annotated[SendableMessageType, Field(discriminator="type")]
+SendableMessageType = CommandSendableMessage | GetStateSendableMessage
+SendableMessage = Annotated[SendableMessageType, Field(discriminator="type")]
 
 # helper functions
 
