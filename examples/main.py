@@ -9,7 +9,7 @@ logger.addHandler(logging.StreamHandler())
 
 
 async def main():
-    client = Concord4WSClient("10.1.1.10", 5008)
+    client = Concord4WSClient("127.0.0.1", 8080)
 
     if await client.test_connect():
         print("Connected")

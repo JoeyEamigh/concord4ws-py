@@ -27,7 +27,7 @@ def main():
         )
     )
 
-    arm_command_json = arm_command.model_dump_json()
+    arm_command_json = arm_command.json()
     print(f"Arm Command JSON: {arm_command_json}")
 
 
