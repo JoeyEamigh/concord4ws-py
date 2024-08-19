@@ -1,6 +1,7 @@
 import asyncio
 import logging
 from concord4ws import Concord4WSClient
+# from concord4ws.types import CommandSendableMessage, ConcordListCommand
 
 logger = logging.getLogger("concord4ws")
 logger.setLevel(logging.DEBUG)
@@ -8,7 +9,7 @@ logger.addHandler(logging.StreamHandler())
 
 
 async def main():
-    client = Concord4WSClient("127.0.0.1", 8080)
+    client = Concord4WSClient("10.1.1.10", 5008)
 
     if await client.test_connect():
         print("Connected")
@@ -34,6 +35,8 @@ async def main():
     )
 
     print("Ready!")
+
+    # await client.send(CommandSendableMessage(data=ConcordListCommand(params="allData")))
 
     await asyncio.futures.Future()
 

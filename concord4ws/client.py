@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import asyncio
+import json
 import signal
 from typing import Callable, Optional
 from concord4ws.types import (
@@ -11,19 +12,19 @@ from concord4ws.types import (
     CommandSendableMessage,
     ConcordArmCommand,
     ConcordDisarmCommand,
+    ConcordReceivedMessage,
     ConcordToggleChimeCommand,
     DisarmOptions,
     Keypress,
     PanelData,
     PartitionData,
-    ReceivableMessage,
     SendableMessage,
     State,
+    StateReceivedMessage,
     ZoneData,
     ZoneStatusData,
     arming_level_to_partition_arming_level,
 )
-from pydantic import TypeAdapter
 import websockets
 import logging
 
@@ -93,9 +94,18 @@ class Concord4WSClient:
     def _handle_message(self, message: websockets.Data) -> None:
         """Handle incoming message from server."""
         try:
-            recv: ReceivableMessage = TypeAdapter(ReceivableMessage).validate_json(
-                message
-            )
+            obj = json.loads(message)
+            type = obj.get("type")
+
+            match type:
+                case "state":
+                    recv = StateReceivedMessage.parse_obj(obj)
+                case "message":
+                    recv = ConcordReceivedMessage.parse_obj(obj)
+                case _:
+                    logger.error("unhandled message type: %s", type)
+                    return
+
             logger.debug("decoded message as: %s", recv)
 
             if recv.type == "state":
@@ -212,7 +222,7 @@ class Concord4WSClient:
 
         logger.debug("sending message: %s", message)
 
-        await self._ws.send(message.model_dump_json())
+        await self._ws.send(message.json())
 
     async def arm(
         self,

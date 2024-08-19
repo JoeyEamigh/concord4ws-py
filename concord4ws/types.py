@@ -1,11 +1,18 @@
 from typing import Annotated, Literal, Optional, Tuple
 import typing
-from pydantic import BaseModel as PydanticBaseModel, ConfigDict, Field
-from pydantic.alias_generators import to_camel
+from pydantic import BaseModel as PydanticBaseModel, Field
+
+
+def to_camel(string: str) -> str:
+    return "".join(
+        word.capitalize() if i != 0 else word
+        for i, word in enumerate(string.split("_"))
+    )
 
 
 class BaseModel(PydanticBaseModel):
-    model_config = ConfigDict(alias_generator=to_camel)
+    class Config:
+        alias_generator = to_camel
 
 
 # data types
@@ -346,10 +353,6 @@ class ConcordReceivedMessage(BaseModel):
 class StateReceivedMessage(BaseModel):
     type: Literal["state"]
     data: State
-
-
-ConcordMessageType = StateReceivedMessage | ConcordReceivedMessage
-ReceivableMessage = Annotated[ConcordMessageType, Field(discriminator="type")]
 
 
 # command types
