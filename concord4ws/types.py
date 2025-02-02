@@ -15,7 +15,7 @@ ZoneType = Literal["hardwired", "rf", "touchpad"]
 ZoneStatus = Literal[
     "normal", "tripped", "faulted", "alarm", "trouble", "bypassed", "unknown"
 ]
-PartitionArmingLevel = Literal["off", "stay", "away", "phoneTest", "sensorTest"]
+PartitionArmingLevel = Literal["off", "stay", "home", "away", "phoneTest", "sensorTest"] ##added home to match return from panel
 PanelType = Literal["concord", "concordExpress", "concordExpress4", "concordEuro"]
 ArmingLevel = Literal["zoneTest", "off", "home", "away", "night", "silent"]
 Feature = Literal[
