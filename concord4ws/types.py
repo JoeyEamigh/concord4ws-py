@@ -15,7 +15,6 @@ ZoneType = Literal["hardwired", "rf", "touchpad"]
 ZoneStatus = Literal[
     "normal", "tripped", "faulted", "alarm", "trouble", "bypassed", "unknown"
 ]
-PartitionArmingLevel = Literal["off", "stay", "home", "away", "phoneTest", "sensorTest"] ##added home to match return from panel
 PanelType = Literal["concord", "concordExpress", "concordExpress4", "concordEuro"]
 ArmingLevel = Literal["zoneTest", "off", "home", "away", "night", "silent"]
 Feature = Literal[
@@ -58,7 +57,7 @@ class ZoneStatusData(BaseModel):
 class PartitionData(BaseModel):
     partition_number: int
     area_number: int
-    arming_level: PartitionArmingLevel
+    arming_level: ArmingLevel
     zones: list[str]
 
     def id(self) -> int:
@@ -478,35 +477,8 @@ class GetStateSendableMessage(BaseModel):
 SendableMessageType = CommandSendableMessage | GetStateSendableMessage
 SendableMessage = Annotated[SendableMessageType, Field(discriminator="type")]
 
+
 # helper functions
-
-
-def partition_arming_level_to_arming_level(level: PartitionArmingLevel) -> ArmingLevel:
-    if level == "off":
-        return "off"
-    if level == "stay":
-        return "home"
-    if level == "away":
-        return "away"
-    if level == "phoneTest":
-        return "zoneTest"
-    if level == "sensorTest":
-        return "zoneTest"
-
-
-def arming_level_to_partition_arming_level(level: ArmingLevel) -> PartitionArmingLevel:
-    if level == "off":
-        return "off"
-    if level == "home":
-        return "stay"
-    if level == "away":
-        return "away"
-    if level == "zoneTest":
-        return "phoneTest"
-
-    return "off"
-
-
 def code_to_keypresses(code: str) -> list[Keypress]:
     all_keypresses = typing.get_args(Keypress)
 

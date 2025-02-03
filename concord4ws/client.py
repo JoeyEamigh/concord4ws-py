@@ -21,7 +21,6 @@ from concord4ws.types import (
     State,
     ZoneData,
     ZoneStatusData,
-    arming_level_to_partition_arming_level,
 )
 from pydantic import TypeAdapter
 import websockets
@@ -156,9 +155,7 @@ class Concord4WSClient:
 
     def _handle_arming_level_data(self, data: ArmingLevelData) -> None:
         """Handle arming level data message."""
-        self._state.partitions[
-            data.partition_number
-        ].arming_level = arming_level_to_partition_arming_level(data.arming_level)
+        self._state.partitions[data.partition_number].arming_level = data.arming_level
 
         if data.callback_id() in self._callbacks:
             for callback in self._callbacks[data.callback_id()]:
